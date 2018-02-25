@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -28,7 +29,7 @@ header {
 </style>
 
 </head>
-<body>
+<body ng-app="deps" ng-controller="card-controller">
 
 	<header>
 		Dependency Insights
@@ -45,35 +46,43 @@ header {
 			</div>
 		</div>
 
-		<div class="row">
+		<form ng-submit="submit()">
+		<div class="form-group row">
 			<div class="col-md-8">
-				<input type="text" placeholder="Dependency Name" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+				<input type="text" ng-model="name" placeholder="Dependency Name" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
 			</div>
 
 			<div class="col-md-2">
-				<input type="text" placeholder="Version" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+				<input type="text" ng-model="version" placeholder="Version" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
 			</div>
 
 			<div class="col-md-2">
 				<input class="btn btn-primary" type="submit" value="Submit">
 			</div>
 		</div>
+		</form>
 
-		<div class="row">
+		<div class="row" style="text-align: center;">
+			<h1>
+				Showing results for {{ count }} <img src="https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg" style="height: 30px;"> packages
+			</h1>
+		</div>
+
+		<div class="row" >
 			<div class="results col-md-6">
 				<span style="color: #64CF55">
-					<h1>83%</h1>
+					<h1>{{ passing }}</h1>
 					<h3>passing</h3>	
 				</span>
 
 					
-				<div class="card" style="margin-top: 20px; display: inline-block; width: 18rem;">
+				<div class="card" ng-repeat="x in P" style="margin-top: 20px; display: inline-block; width: 18rem;">
 					<div class="card-body">
 					<h5 class="card-title">
-						twbs/bootstrap
+						{{ x.slug }}
 						<svg aria-hidden="true" class="octicon octicon-check" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z" fill="green"></path></svg>
 					</h5>
-					<h6 class="card-subtitle mb-2 text-muted">1.0.1 -> 2.0.0</h6>
+					<h6 class="card-subtitle mb-2 text-muted">{{ x.oldv }} -> {{ x.newv}}</h6>
 					<a href="#" class="card-link">See Relevant Issues</a>
 					<a href="#" class="card-link">
 
@@ -85,17 +94,17 @@ header {
 
 			<div class="results col-md-6">
 				<span style="color: #FF3F51">
-					<h1>17%</h1>
+					<h1>{{ failing }}</h1>
 					<h3>failing</h3>
 				</span>
 
-				<div class="card" style="margin-top: 20px; display: inline-block; width: 18rem;">
+				<div class="card" ng-repeat="x in F" style="margin-top: 20px; display: inline-block; width: 18rem;">
 					<div class="card-body">
 					<h5 class="card-title">
-						twbs/bootstrap
+						{{ x.slug }}
 						<svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z" fill="red"></path></svg>
 					</h5>
-					<h6 class="card-subtitle mb-2 text-muted">1.0.1 -> 2.0.0</h6>
+					<h6 class="card-subtitle mb-2 text-muted">{{ x.oldv }} -> {{ x.newv }}</h6>
 					<a href="#" class="card-link">See Relevant Issues</a>
 					<a href="#" class="card-link">
 
@@ -112,5 +121,25 @@ header {
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+	<script>
+		var app = angular.module('deps', []);
+		app.controller('card-controller', ($scope, $http) => {
+			$scope.submit = function() {
+
+				$http.get('api/' + $scope.name + '/' + ($scope.version ? $scope.version : '*'))
+				.then(res => {
+					let json = res.data;
+					$scope.count = json.cnt;
+					$scope.passing = ((1 - json.avg) * 100).toFixed(1) + '%';
+					$scope.failing = (json.avg * 100).toFixed(1) + '%';
+
+					$scope.P = json.data.filter(x => x.state == 'passed');
+					console.log(json.data);
+					$scope.F = json.data.filter(x => x.state == 'failed');
+				});
+			}
+		});
+	</script>
 </body>
 </html
