@@ -37,54 +37,17 @@ header {
 
 	<div class="container">
 
-		<div class="row" style="margin-bottom: 20px;">
-			<div class="blurb col-md-6">
-				<div class="alert alert-warning" role="alert">
-					Dependency Insights helps you estimate
-					the effort required to upgrade to a new version
-					of a dependency. Based on data from over
-					25,000 npm packages and build data from Travis CI,
-					we determine an estimate of the number of packages
-					that encountered breaking changes in the new release.
-				</div>
+		<div class="row" style="margin-top: 40px;">
+			<div class="col-md-12" style="text-align: center;">
+				<p>
+					Enter a package name and semantic version string
+					to see if a dependency is associated with broken builds.
+				</p>
 			</div>
-			<div class="blurb col-md-6">
-				<div class="card">
-				<div class="card-header">
-					Dependency updates associated with broken builds
-				</div>
-				<ul class="list-group list-group-flush">
-				<li class="list-group-item">
-					<strong>request</strong> 2.40.0
-					<span style="float: right;">
-						28% of updates broke
-					</span>
-				</li>
-				<li class="list-group-item">
-					<strong>react</strong> 0.14.9
-					<span style="float: right;">
-						21% of updates broke
-					</span>
-				</li>
-				<li class="list-group-item">
-					<strong>async</strong> 2.5.0
-					<span style="float: right;">
-						16% of updates broke
-					</span>
-				</li>
-				<li class="list-group-item">
-					<strong>lodash</strong> 4.17.4
-					<span style="float: right;">
-						12% of updates broke
-					</span>
-				</li>
-				</ul>
-				</div>
-			</div>
-		</div>
+		</div>	
 
 		<form ng-submit="submit()">
-		<div class="form-group row">
+		<div class="form-group row" style="margin-top: 50px;">
 			<div class="col-md-8">
 				<input type="text" ng-model="name" placeholder="Dependency Name" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
 			</div>
@@ -99,13 +62,13 @@ header {
 		</div>
 		</form>
 
-		<div class="row" style="text-align: center; margin-top: 70px;">
+		<div class="row" ng-hide="hide" style="text-align: center; margin-top: 70px;">
 			<h1 style="width: 100%;">
 				Showing results for {{ count }} <img src="https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg" style="height: 30px;"> packages
 			</h1>
 		</div>
 
-		<div class="row" ng-hide="hide">
+		<div class="row" ng-hide="hide" style="max-height: 800px; overflow-y: scroll;">
 			<div class="results col-md-6">
 				<span style="color: #64CF55">
 					<h1>{{ passing }}</h1>
@@ -152,6 +115,54 @@ header {
 						</a>
 					</a>
 					</div>
+				</div>
+			</div>
+		</div>
+
+		<hr style="margin-top: 100px;">
+
+		<div class="row" style="margin-bottom: 20px;">
+			<div class="blurb col-md-6">
+				<div class="alert alert-warning" role="alert">
+					Dependency Insights helps you estimate
+					the effort required to upgrade to a new version
+					of a dependency. Based on data from over
+					25,000 npm packages and build data from Travis CI,
+					we determine an estimate of the number of packages
+					that encountered breaking changes in the new release.
+				</div>
+			</div>
+			<div class="blurb col-md-6">
+				<div class="card">
+				<div class="card-header">
+					Dependency updates associated with broken builds
+				</div>
+				<ul class="list-group list-group-flush">
+				<li class="list-group-item">
+					<strong>request</strong> 2.40.0
+					<span style="float: right;">
+						28% of updates broke
+					</span>
+				</li>
+				<li class="list-group-item">
+					<strong>react</strong> 0.14.9
+					<span style="float: right;">
+						21% of updates broke
+					</span>
+				</li>
+				<li class="list-group-item">
+					<strong>async</strong> 2.5.0
+					<span style="float: right;">
+						16% of updates broke
+					</span>
+				</li>
+				<li class="list-group-item">
+					<strong>lodash</strong> 4.17.4
+					<span style="float: right;">
+						12% of updates broke
+					</span>
+				</li>
+				</ul>
 				</div>
 			</div>
 		</div>
