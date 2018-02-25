@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const mysql = require('mariasql')
 const semver = require('semver');
+const moment = require('moment');
 
 const conn = new mysql({
 	user: 'root',
@@ -28,12 +29,17 @@ app.get('/api/:name/:version', (req, res) => {
 	let name = req.params.name;
 	let version = req.params.version;
 
-	let query = 'select a.slug, dep, oldv, newv, a.commit, state from illinois_updates_2 a join illinois_builds b on a.commit = b.commit where dep = "' + name + '"';
+	let query = 'select a.slug, dep, oldv, newv, a.commit, state, max(date) as date from illinois_updates_3 a join illinois_builds b on a.commit = b.commit where dep = "' + name + '" group by a.slug';
 
 	conn.query(query,
 	(err, rows) => {
 		if(version)
 			rows = rows.filter(x => sat(x.newv, version));
+
+		rows.forEach(x => {
+			x.before = moment(x.date).subtract(7, 'days').format('YYYY-MM-DD');
+			x.after = moment(x.date).add(7, 'days').format('YYYY-MM-DD');
+		});
 
 		let total = rows.length;
 

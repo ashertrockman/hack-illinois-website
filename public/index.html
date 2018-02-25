@@ -26,6 +26,48 @@ header {
 	margin-top: 100px;
 	text-align: center;
 }
+
+.spinner {
+	  margin: 100px auto 0;
+		    width: 70px;
+			      text-align: center;
+}
+
+.spinner > div {
+width: 18px;
+height: 18px;
+background-color: #333;
+
+border-radius: 100%;
+display: inline-block;
+-webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner .bounce1 {
+-webkit-animation-delay: -0.32s;
+animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+-webkit-animation-delay: -0.16s;
+animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+0%, 80%, 100% { -webkit-transform: scale(0) }
+40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bouncedelay {
+0%, 80%, 100% { 
+-webkit-transform: scale(0);
+transform: scale(0);
+} 40% { 
+-webkit-transform: scale(1.0);
+transform: scale(1.0);
+}
+}
 </style>
 
 </head>
@@ -68,6 +110,12 @@ header {
 			</h1>
 		</div>
 
+		<div class="spinner" ng-hide="spinner" style="margin-top: 50px;">
+			  <div class="bounce1"></div>
+			    <div class="bounce2"></div>
+			      <div class="bounce3"></div>
+		</div>
+
 		<div class="row" ng-hide="hide" style="max-height: 800px; overflow-y: scroll;">
 			<div class="results col-md-6">
 				<span style="color: #64CF55">
@@ -83,7 +131,7 @@ header {
 						<svg aria-hidden="true" class="octicon octicon-check" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z" fill="green"></path></svg>
 					</h5>
 					<h6 class="card-subtitle mb-2 text-muted">{{ x.oldv }} -> {{ x.newv}}</h6>
-					<a href="#" class="card-link">See Relevant Issues</a>
+					<a ng-href="https://github.com/{{x.slug}}/issues?q=created:{{x.before}}..{{x.after}}" class="card-link">See Relevant Issues</a>
 					<a href="#" class="card-link">
 
 						<a href="https://github.com/{{ x.slug }}/commit/{{ x.commit }}">
@@ -107,7 +155,7 @@ header {
 						<svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z" fill="red"></path></svg>
 					</h5>
 					<h6 class="card-subtitle mb-2 text-muted">{{ x.oldv }} -> {{ x.newv }}</h6>
-					<a href="#" class="card-link">See Relevant Issues</a>
+					<a ng-href="https://github.com/{{x.slug}}/issues?q=created:{{x.before}}..{{x.after}}" class="card-link">See Relevant Issues</a>
 					<a href="#" class="card-link">
 
 						<a href="https://github.com/{{ x.slug }}/commit/{{ x.commit }}">
@@ -179,11 +227,14 @@ header {
 		app.controller('card-controller', ($scope, $http) => {
 			$scope.count = 0
 			$scope.hide = true
+			$scope.spinner = true
 			$scope.submit = function() {
 
-				$scope.hide = false
+				$scope.spinner = false
 				$http.get('api/' + $scope.name + '/' + ($scope.version ? $scope.version : '*'))
 				.then(res => {
+					$scope.spinner = true;
+					$scope.hide = false;
 					let json = res.data;
 					$scope.count = json.total;
 					$scope.passing = ((1 - json.avg) * 100).toFixed(1) + '%';

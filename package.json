@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "^4.16.2",
     "mariasql": "^0.2.6",
+    "moment": "^2.20.1",
     "mysql": "^2.15.0",
     "semver": "^5.5.0"
   },
