@@ -11,6 +11,7 @@ const conn = new mysql({
 	port: 3306
 })
 
+
 function sat(v, R) {
 	try {
 		let s = semver.satisfies(v, R);	
@@ -34,9 +35,11 @@ app.get('/api/:name/:version', (req, res) => {
 		if(version)
 			rows = rows.filter(x => sat(x.newv, version));
 
+		let total = rows.length;
+
 		let cnt = rows.reduce( (acc, val) => acc + (val.state == 'failed' ? 1 : 0), 0);
 		let avg =  cnt / rows.length;
-		return res.send({cnt, avg, data: rows});
+		return res.send({total, cnt, avg, data: rows});
 	});
 });
 

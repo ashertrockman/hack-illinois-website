@@ -7,7 +7,7 @@
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-	<title>Hello, world!</title>
+	<title>Dependency Insights</title>
 <style>
 header {
 	background: #E8B12E;
@@ -19,7 +19,7 @@ header {
 	font-size: 24pt;
 }
 .blurb {
-	text-align: center;
+	text-align: left;
 	margin: 50px 0px;
 }
 .results {
@@ -32,17 +32,54 @@ header {
 <body ng-app="deps" ng-controller="card-controller">
 
 	<header>
-		Dependency Insights
+		<img src="https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg" style="height: 30px;">&nbsp;&nbsp;&nbsp;Dependency Insights
 	</header>
 
 	<div class="container">
 
-		<div class="row">
-			<div class="blurb col-md-12">
-				<p>
-					This is some filler text for the time being.
-					It will say what the service does.
-				</p>
+		<div class="row" style="margin-bottom: 20px;">
+			<div class="blurb col-md-6">
+				<div class="alert alert-warning" role="alert">
+					Dependency Insights helps you estimate
+					the effort required to upgrade to a new version
+					of a dependency. Based on data from over
+					25,000 npm packages and build data from Travis CI,
+					we determine an estimate of the number of packages
+					that encountered breaking changes in the new release.
+				</div>
+			</div>
+			<div class="blurb col-md-6">
+				<div class="card">
+				<div class="card-header">
+					Dependency updates associated with broken builds
+				</div>
+				<ul class="list-group list-group-flush">
+				<li class="list-group-item">
+					<strong>request</strong> 2.40.0
+					<span style="float: right;">
+						28% of updates broke
+					</span>
+				</li>
+				<li class="list-group-item">
+					<strong>react</strong> 0.14.9
+					<span style="float: right;">
+						21% of updates broke
+					</span>
+				</li>
+				<li class="list-group-item">
+					<strong>async</strong> 2.5.0
+					<span style="float: right;">
+						16% of updates broke
+					</span>
+				</li>
+				<li class="list-group-item">
+					<strong>lodash</strong> 4.17.4
+					<span style="float: right;">
+						12% of updates broke
+					</span>
+				</li>
+				</ul>
+				</div>
 			</div>
 		</div>
 
@@ -62,13 +99,13 @@ header {
 		</div>
 		</form>
 
-		<div class="row" style="text-align: center;">
-			<h1>
+		<div class="row" style="text-align: center; margin-top: 70px;">
+			<h1 style="width: 100%;">
 				Showing results for {{ count }} <img src="https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg" style="height: 30px;"> packages
 			</h1>
 		</div>
 
-		<div class="row" >
+		<div class="row" ng-hide="hide">
 			<div class="results col-md-6">
 				<span style="color: #64CF55">
 					<h1>{{ passing }}</h1>
@@ -86,7 +123,9 @@ header {
 					<a href="#" class="card-link">See Relevant Issues</a>
 					<a href="#" class="card-link">
 
+						<a href="https://github.com/{{ x.slug }}/commit/{{ x.commit }}">
 						<svg style="width: 25px; height: 25px;" id="GitHub-Logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><style>.st0{fill-rule:evenodd;clip-rule:evenodd}</style><path class="st0" d="M14 0C6.27 0 0 6.43 0 14.36c0 6.34 4.01 11.72 9.57 13.62.7.13.96-.31.96-.69 0-.34-.01-1.24-.02-2.44-3.89.87-4.72-1.92-4.72-1.92-.64-1.66-1.55-2.1-1.55-2.1-1.27-.89.1-.87.1-.87 1.4.1 2.14 1.48 2.14 1.48 1.25 2.19 3.28 1.56 4.07 1.19.13-.93.49-1.56.89-1.92-3.11-.36-6.38-1.59-6.38-7.09 0-1.57.55-2.85 1.44-3.85-.14-.36-.62-1.82.14-3.8 0 0 1.18-.39 3.85 1.47a12.8 12.8 0 0 1 3.5-.48c1.19.01 2.39.16 3.5.48 2.67-1.86 3.85-1.47 3.85-1.47.76 1.98.28 3.44.14 3.8.9 1 1.44 2.28 1.44 3.85 0 5.51-3.27 6.73-6.39 7.08.5.44.95 1.32.95 2.66 0 1.92-.02 3.47-.02 3.94 0 .38.25.83.96.69C23.99 26.07 28 20.7 28 14.36 28 6.43 21.73 0 14 0z"></path></svg>	
+						</a>
 					</a>
 					</div>
 				</div>
@@ -108,7 +147,9 @@ header {
 					<a href="#" class="card-link">See Relevant Issues</a>
 					<a href="#" class="card-link">
 
+						<a href="https://github.com/{{ x.slug }}/commit/{{ x.commit }}">
 						<svg style="width: 25px; height: 25px;" id="GitHub-Logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><style>.st0{fill-rule:evenodd;clip-rule:evenodd}</style><path class="st0" d="M14 0C6.27 0 0 6.43 0 14.36c0 6.34 4.01 11.72 9.57 13.62.7.13.96-.31.96-.69 0-.34-.01-1.24-.02-2.44-3.89.87-4.72-1.92-4.72-1.92-.64-1.66-1.55-2.1-1.55-2.1-1.27-.89.1-.87.1-.87 1.4.1 2.14 1.48 2.14 1.48 1.25 2.19 3.28 1.56 4.07 1.19.13-.93.49-1.56.89-1.92-3.11-.36-6.38-1.59-6.38-7.09 0-1.57.55-2.85 1.44-3.85-.14-.36-.62-1.82.14-3.8 0 0 1.18-.39 3.85 1.47a12.8 12.8 0 0 1 3.5-.48c1.19.01 2.39.16 3.5.48 2.67-1.86 3.85-1.47 3.85-1.47.76 1.98.28 3.44.14 3.8.9 1 1.44 2.28 1.44 3.85 0 5.51-3.27 6.73-6.39 7.08.5.44.95 1.32.95 2.66 0 1.92-.02 3.47-.02 3.94 0 .38.25.83.96.69C23.99 26.07 28 20.7 28 14.36 28 6.43 21.73 0 14 0z"></path></svg>	
+						</a>
 					</a>
 					</div>
 				</div>
@@ -125,12 +166,15 @@ header {
 	<script>
 		var app = angular.module('deps', []);
 		app.controller('card-controller', ($scope, $http) => {
+			$scope.count = 0
+			$scope.hide = true
 			$scope.submit = function() {
 
+				$scope.hide = false
 				$http.get('api/' + $scope.name + '/' + ($scope.version ? $scope.version : '*'))
 				.then(res => {
 					let json = res.data;
-					$scope.count = json.cnt;
+					$scope.count = json.total;
 					$scope.passing = ((1 - json.avg) * 100).toFixed(1) + '%';
 					$scope.failing = (json.avg * 100).toFixed(1) + '%';
 
