@@ -20,3 +20,10 @@ For each repository, we extract dependency upgrade events from the `package.json
 To make this data accessible, we created an [easy-to-use website](http://130.211.131.166), which provides statistics for specific version ranges for packages. For each upgrade event, we also provide a link to GitHub issues which may be of interest in learning the reason for a breaking build or how the problem was solved.
 
 Our web app is written in Node.js using the Express framework. The front-end uses Angular.js and Bootstrap. Data extraction and processing was done in Node.js, and the data was stored in a MySQL database. The website runs on a Google Cloud Platform Compute Engine.
+
+## Using
+
+Visit the [web app](http://130.211.131.166).
+
+The scripts in `mining` may be run in any order to populate a MySQL database with information (credentials need to be added). The web app can be started with `node app`: it runs on port 80 by default.
+
